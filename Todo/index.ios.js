@@ -23,20 +23,7 @@ var data = [
   "DrawerLayoutAndroid ",
       // 割愛
 ]
-// import TodoListContainer from 'Todo/src/TodoListContainer';
 
-//export default class Todo extends Component {
-//  render() {
-//    let pic = {
-//    uri: 'https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg'
-//    };
-//    return (
-//
-//             <Image source={pic} style={{width: 193, height: 110}}/>
-//
-//            );
-//  }
-//}
 class Greeting extends Component {
   render() {
     return (
@@ -49,15 +36,12 @@ export default class Todo extends Component {
   constructor(props) {
     super(props);
   //  this.state = {text: ''};
-  const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
     this.state = {
-    text: '',
-    todos: [
-            {text: 'Learn react native'},
-            {text: 'Make a to-do app'}
-          ],
-    dataSource: ds.cloneWithRows(['hoge', 'hogehoge']),
+      text: '',
+      todo: [],
+      dataSource: ds.cloneWithRows(['']), //hoge', 'hogehoge
     };
 
     // this.dataSource = new ListView.DataSource({
@@ -65,17 +49,47 @@ export default class Todo extends Component {
     // });
 
   }
+
+
+  addItem(item) {
+    this.state.todo = this.state.todo.concat(this.state.text);
+    // const newArray = this.state.dataSource.slice(); // ここ注目。シャローコピーしている
+    // newArray.push(this.state.text);
+    this.setState({
+      dataSource: this.state.dataSource.cloneWithRows(this.state.todo),
+    });
+    // this.todos = newArray;
+  }
+
+
+  // addTodo(text) {
+  //   this.setState({
+  //     todos: this.state.dataSource.concat([{text: text}])
+  //   });
+  // }
+  // onAddPress() {
+  //   // TodoListContainerのaddTodoメソッドにtextを渡して実行
+  //   this.props.addTodo(this.state.text);
+  //
+  //   // Todo追加後はTextInputを空にする
+  //   this.setState({
+  //     text: ''
+  //   });
+  // }
+
+
+
   _onChangeText(text) {
    this.setState({ text: text });
- }
+  }
 
- renderRow(data) {
-   return (
-     <View style={{ padding: 10, backgroundColor: 'white', margin: 5 }}>
-       <Text>{data.name}</Text>
-     </View>
-   )
- }
+  renderRow(data) {
+    return (
+       <View style={{ padding: 10, backgroundColor: 'white', margin: 5 }}>
+         <Text>{data.name}</Text>
+       </View>
+     )
+   }
 
 
 
@@ -85,38 +99,38 @@ export default class Todo extends Component {
             <View style={{flex: 1}}>
 
             <View style={{flex: 1, backgroundColor: '#e6e6fa'}}>
-            <Text style={{padding: 20, fontSize: 30, color: '#F5FCFF'}}>TODOリスト</Text>
+              <Text style={{padding: 20, fontSize: 30, color: '#F5FCFF'}}>TODOリスト</Text>
             </View>
             <View style={{flex: 2, backgroundColor: 'skyblue'}}>
-            <TextInput
-            style={{height: 40}}
-            placeholder="テキスト入力してみよう"
-            onChangeText={(text) => this.setState({text})}
-            />
-            <Text style={{padding: 10, fontSize: 42}}>
-            {this.state.text.split(' ').map((word) => word && '😎').join(' ')}
-            {this.state.text}
-            </Text>
+              <TextInput
+              style={{height: 40}}
+              placeholder="テキスト入力してみよう"
+              onChangeText={(text) => this.setState({text})}
+              />
+              <Text style={{padding: 10, fontSize: 42}}>
+                {this.state.text.split(' ').map((word) => word && '😎').join(' ')}
+                {this.state.text}
+                </Text>
             </View>
 
             <View style={{flex: 3, backgroundColor: '#ffc0cb'}}>
-            <Text style={{padding: 10, fontSize: 42}}>
-              {this.state.text}
-            </Text>
+              <Text style={{padding: 10, fontSize: 42}}>
+                {this.state.text}
+              </Text>
 
-            <TextInput
+              <TextInput
                style={styles.textform}
                onChangeText={this._onChangeText.bind(this)}
-             />
-             <TouchableHighlight　onPress={this.clearText}>
-               <Text style={styles.button}>
-                 追加
-               </Text>
-            </TouchableHighlight>
-            <ListView
-              dataSource={this.state.dataSource}
-              renderRow={(rowData) => <Text>{rowData}</Text>}
-            />
+               />
+               <TouchableHighlight　onPress={this.addItem.bind(this)}>
+                 <Text style={styles.button}>
+                   追加
+                 </Text>
+               </TouchableHighlight>
+                <ListView
+                    dataSource={this.state.dataSource}
+                  renderRow={(rowData) => <TouchableHighlight onPress={this.addItem.bind(this)}><Text>{rowData}</Text></TouchableHighlight>}
+                />
             </View>
 
 
