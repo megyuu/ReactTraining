@@ -5,6 +5,14 @@
  */
 
 import React, { Component } from 'react';
+
+// タブ
+var FirstTab = require('./FirstTab.js');
+var SecondTab = require('./SecondTab.js');
+var ThirdTab = require('./ThirdTab.js');
+
+var base64Icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAq9JREFUeJzt3E+ITlEYx/GvfyWZBSYsaJJItjZKlLGbJaUsKAtbVoSsFFEWbC2tyETKUv4kEZIsFNKMjVkxmY0aExZ3MRvezpzn3O47c76furvz3OfUfabp3vfeH0iSJEmSJEmSJEmSJEmSJEmSpNoNAmeBF8AUMANMAPeAg8CS7ramth0FfgB/ehxvgG1dbVD/tyhYfwa4mLh2EhgG3ias3QVszN1UZW521XiE3n/1/zrGgYGEc49mnLvWI2RxoO5qRt0QcDKzp1qQOwDDwJbM2mPE//WokMgA5FoPbA/Uq6DcARgK9t0UrFchuQOgBSJ3AMaDfceC9SokdwAeBnpOAO8D9SoodwAeAR8ya69T4P5VZeQOwG/gBHO/kGPAlcyeakH0fvwUcDlx7XdgL/AuYe1OYEPupioz2vUGDtM85+/1uPIVsLWrDap9q4HTwDOaXwZ/AV+BO8ABvN2UJEmSJEmSJEmSJEmad8wHqJj5APOY+QDzn/kAlR8h5gNUznyAypkPUDnzASrnBxuVMx+gcuYDVM58gMqZD1A58wHmP/MB1D3zASRJkiRJkiRJkiRJkvpEG9/tr6LJC5imyQlQBQaBS8AXZl8DmwGeA0fwjaC+VeIjzX3ALWBNjzVPaF4N+5Z4TvMB0nWWDwDN27s/SfuO/TWwPPG85gP0eT4AwDLgBukXdQdwLtBPLYgMwH7mnhFwHFgR6KnCIgMwklEzAOwO9FRhkQHYnFmXmyyiFnh7VrnIAHzOrPsY6KnCIgNwP6NmCnga6KnCIgNwl7lnBFyjeW6gPhEZgBmaL4NTL+hL4EKgn1pQ4lHwHuA2sLbHmgc0odGTiec0HyBd5/kA0PwCeB74xOwjymngMXAIgyGrshJYByzteiOSJEmSJEmSJEmSJEmSJEmSJEkL2V9B+I2vt8MIRgAAAABJRU5ErkJggg==';
+
 import {
   AppRegistry,
   StyleSheet,
@@ -13,7 +21,10 @@ import {
   Image,
   TextInput,
   TouchableHighlight,
-  ListView
+  ListView,
+  Button,
+  TabBarIOS
+  // TabBarIOS.Item,
 } from 'react-native';
 
 var data = [
@@ -33,116 +44,64 @@ class Greeting extends Component {
 }
 
 export default class Todo extends Component {
+  static title = '<TabBarIOS>';
+  static description = 'Tab-based navigation.';
+  static displayName = 'TabBarExample';
+
+
   constructor(props) {
     super(props);
-  //  this.state = {text: ''};
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
     this.state = {
-      text: '',
-      todo: [],
-      dataSource: ds.cloneWithRows(['']), //hoge', 'hogehoge
+      selectedTab: 'FirstTab',
     };
 
-    // this.dataSource = new ListView.DataSource({
-    // rowHasChanged: (row1, row2) => row1 !== row2
-    // });
-
   }
-
-
-  addItem(item) {
-    this.state.todo = this.state.todo.concat(this.state.text);
-    // const newArray = this.state.dataSource.slice(); // ここ注目。シャローコピーしている
-    // newArray.push(this.state.text);
-    this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(this.state.todo),
-    });
-    // this.todos = newArray;
-  }
-
-
-  // addTodo(text) {
-  //   this.setState({
-  //     todos: this.state.dataSource.concat([{text: text}])
-  //   });
-  // }
-  // onAddPress() {
-  //   // TodoListContainerのaddTodoメソッドにtextを渡して実行
-  //   this.props.addTodo(this.state.text);
-  //
-  //   // Todo追加後はTextInputを空にする
-  //   this.setState({
-  //     text: ''
-  //   });
-  // }
-
-
-
-  _onChangeText(text) {
-   this.setState({ text: text });
-  }
-
-  renderRow(data) {
-    return (
-       <View style={{ padding: 10, backgroundColor: 'white', margin: 5 }}>
-         <Text>{data.name}</Text>
-       </View>
-     )
-   }
-
 
 
   render() {
     return (
-
-            <View style={{flex: 1}}>
-
-            <View style={{flex: 1, backgroundColor: '#e6e6fa'}}>
-              <Text style={{padding: 20, fontSize: 30, color: '#F5FCFF'}}>TODOリスト</Text>
-            </View>
-            <View style={{flex: 2, backgroundColor: 'skyblue'}}>
-              <TextInput
-              style={{height: 40}}
-              placeholder="テキスト入力してみよう"
-              onChangeText={(text) => this.setState({text})}
-              />
-              <Text style={{padding: 10, fontSize: 42}}>
-                {this.state.text.split(' ').map((word) => word && '😎').join(' ')}
-                {this.state.text}
-                </Text>
-            </View>
-
-            <View style={{flex: 3, backgroundColor: '#ffc0cb'}}>
-              <Text style={{padding: 10, fontSize: 42}}>
-                {this.state.text}
-              </Text>
-
-              <TextInput
-               style={styles.textform}
-               onChangeText={this._onChangeText.bind(this)}
-               />
-               <TouchableHighlight　onPress={this.addItem.bind(this)}>
-                 <Text style={styles.button}>
-                   追加
-                 </Text>
-               </TouchableHighlight>
-                <ListView
-                    dataSource={this.state.dataSource}
-                  renderRow={(rowData) => <TouchableHighlight onPress={this.addItem.bind(this)}><Text>{rowData}</Text></TouchableHighlight>}
-                />
-            </View>
-
-
-            <TouchableHighlight onPress={this._onPressButton}>
-            <Text>Button</Text>
-            </TouchableHighlight>
-
-            <Greeting name='Rexxar' />
-            <Greeting name='Jaina' />
-            <Greeting name='Valeera' />
-            </View>
+      <TabBarIOS selectedTab={this.state.selectedTab}>
+        <TabBarIOS.Item
+          selected={this.state.selectedTab === 'FirstTab'}
+          icon={{uri: base64Icon, scale: 3}}
+          onPress={() => {
+            this.setState(
+              {selectedTab: 'FirstTab'}
             );
+          }}
+          title='todo'
+        >
+        <FirstTab />
+        </TabBarIOS.Item>
+        <TabBarIOS.Item
+            selected={this.state.selectedTab === 'SecondTab'}
+            // icon={{uri: 'search'}}
+            systemIcon='featured'
+
+            onPress={() => {
+              this.setState(
+                {selectedTab: 'SecondTab'}
+              );
+            }}
+          >
+          <SecondTab />
+        </TabBarIOS.Item>
+        <TabBarIOS.Item
+            selected={this.state.selectedTab === 'ThirdTab'}
+            // icon={{uri: 'search'}}
+            systemIcon='more'
+
+            onPress={() => {
+              this.setState(
+                {selectedTab: 'ThirdTab'}
+              );
+            }}
+          >
+          <ThirdTab />
+        </TabBarIOS.Item>
+      </TabBarIOS>
+    );
   }
 }
 
