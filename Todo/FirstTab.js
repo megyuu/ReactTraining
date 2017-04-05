@@ -5,8 +5,8 @@
  */
 'use strict';
 import React, { Component } from 'react';
-import CheckBox from 'react-native-checkbox';
-// import CheckBox from 'react-native-check-box';
+// import CheckBox from 'react-native-checkbox';
+import CheckBox from 'react-native-check-box';
 import {
   AppRegistry,
   StyleSheet,
@@ -53,8 +53,8 @@ class FirstTab extends Component {
       selectedTab: 'FirstTab',
       text: '',
       todo: [],
-      count: 0,
-      dataSource: ds.cloneWithRows(['']), //'hoge', 'hogehoge'
+      count: 1,
+      dataSource: ds.cloneWithRows([]), //'hoge', 'hogehoge'
     };
 
     // this.dataSource = new ListView.DataSource({
@@ -65,13 +65,15 @@ class FirstTab extends Component {
 
 
   addItem(item) {
-    this.state.todo = this.state.todo.concat(this.state.text);
-    // const newArray = this.state.dataSource.slice(); // ここ注目。シャローコピーしている
-    // newArray.push(this.state.text);
+    this.state.todo = this.state.todo.concat({id: this.state.count, value: this.state.text, isChecked: true});
+    this.state.count = this.state.count + 1;
     this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(this.state.todo),
+      dataSource: this.state.dataSource.cloneWithRows(this.state.todo, ),
     });
-    // this.todos = newArray;
+  }
+
+  onClick(data) {
+
   }
 
 
@@ -116,18 +118,18 @@ class FirstTab extends Component {
 
         <View style={{backgroundColor: 'skyblue'}}>
           <TextInput
-            style={{height: 40}}
+            style={{height: 50}}
             placeholder="テキスト入力してみよう"
             onChangeText={(text) => this.setState({text})}
           />
-        <Text style={{padding: 10, fontSize: 42}}>
+        <Text style={{padding: 10, fontSize: 20}}>
           {this.state.text.split(' ').map((word) => word && '😎').join(' ')}
           {this.state.text}
         </Text>
         </View>
 
       <View style={{flex: 2, backgroundColor: '#ffc0cb'}}>
-        <Text style={{padding: 10, fontSize: 42}}>
+        <Text style={{padding: 10, fontSize: 20}}>
           {this.state.text}
         </Text>
         <TextInput
@@ -139,34 +141,27 @@ class FirstTab extends Component {
            追加
          </Text>
        </TouchableHighlight>
-       <ScrollView style={{height: 40, backgroundColor: '#e6e6f6'}}>
+       <ScrollView style={{height: 20, backgroundColor: '#e6e6f6'}}>
 
             <ListView
               dataSource = {this.state.dataSource}
               renderRow = {(rowData) =>
                   <TouchableHighlight onPress={this.addItem.bind(this)}>
                     <View>
-                      <CheckBox
-                        label={rowData}
-                        checked={true}
-                        onChange={(checked) => console.log('I am checked', checked)}
+                    <CheckBox
+                          style={{flex: 1, padding: 5}}
+                          onClick={()=>this.onClick.bind(rowData)}
+                          isChecked={rowData.isChecked}
+                          rightText={rowData.id +' : '+ rowData.value+' : '+rowData.isChecked}
+                          rightTextStyle={()=>{return {color: 'red'}; }}
+                          // rightTextStyle={{color: 'red'}}
                       />
-                      <Text>{rowData}</Text>
                     </View>
                   </TouchableHighlight>
               }
             />
         </ScrollView>
       </View>
-      <CheckBox
-        label='Label'
-        checked={true}
-        onChange={(checked) => console.log('I am checked', checked)}
-      />
-
-      <TouchableHighlight onPress={this._onPressButton}>
-      <Text>Button</Text>
-      </TouchableHighlight>
 
       <Greeting name='Rexxar' />
       <Greeting name='Jaina' />
@@ -195,9 +190,9 @@ const styles = StyleSheet.create({
   marginBottom: 5,
   },
   textform: {
-   margin: 20,
-   padding: 10,
-   height: 30,
+   margin: 10,
+   padding: 5,
+   height: 35,
    borderColor: 'gray',
    borderWidth: 2,
    backgroundColor: 'white',
