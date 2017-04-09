@@ -19,7 +19,8 @@ import {
   Button,
   TabBarIOS,
   ScrollView,
-  Alert
+  Alert,
+  TouchableOpacity,
 } from 'react-native';
 
 var data = [
@@ -52,6 +53,7 @@ class FirstTab extends Component {
 
     this.state = {
       selectedTab: 'FirstTab',
+      word:'',
       text: '',
       todo: [],
       count: 1,
@@ -64,23 +66,39 @@ class FirstTab extends Component {
 
   }
 
-
-  addItem(item) {
-    this.state.todo = this.state.todo.concat({id: this.state.count, value: this.state.text, isChecked: true, color: 'red'});
-    this.state.count = this.state.count + 1;
+  deleteItem(item) {
+    var indexOfItem = this.state.todo.findIndex((todo) => todo.id === item.id);
+    this.state.todo.splice(indexOfItem, 1);
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(this.state.todo),
     });
 
   }
 
+  addItem() {
+    // Alert.alert('増やしたい');
+    this.state.todo = this.state.todo.concat({id: this.state.count, value: this.state.text, isChecked: false});
+    this.state.count = this.state.count + 1;
+    this.setState({
+      dataSource: this.state.dataSource.cloneWithRows(this.state.todo),
+    });
+
+    // this.state.text = '';
+
+    //   // Todo追加後はTextInputを空にする
+    // this.setState({text: ''});
+  }
+
+
   onClick(data) {
+    Alert.alert('くりっく');
     //Alert.alert(data.color + data.value);
 
-    data.color = 'black';
+    // data.color = 'black'; //データの更新
+    data.isChecked = !data.isChecked; //チェックの反転
     // Alert.alert(this.state.todo[data.id - 1]);
 
-    this.state.todo[data.id - 1] = {id: data.id, value: data.value, isChecked: true, color: 'blue'};
+    // this.state.todo[data.id - 1] = {id: data.id, value: data.value, isChecked: true, color: 'blue'};
 
     // this.state.todo = this.state.todo.concat({id: data.id, value: data.value, isChecked: false, color:'black'});
     this.setState({
@@ -89,21 +107,13 @@ class FirstTab extends Component {
 
   }
 
-
-  // addTodo(text) {
-  //   this.setState({
-  //     todos: this.state.dataSource.concat([{text: text}])
-  //   });
-  // }
-  // onAddPress() {
-  //   // TodoListContainerのaddTodoメソッドにtextを渡して実行
-  //   this.props.addTodo(this.state.text);
-  //
-  //   // Todo追加後はTextInputを空にする
-  //   this.setState({
-  //     text: ''
-  //   });
-  // }
+  renderColor(data) {
+    if (data.isChecked) {
+      return 'gray';
+    } else {
+      return 'black';
+    }
+  }
 
 
 
@@ -111,13 +121,13 @@ class FirstTab extends Component {
    this.setState({ text: text });
   }
 
-  renderRow(data) {
-    return (
-       <View style={{ padding: 10, backgroundColor: 'white', margin: 5 }}>
-         <Text>{data.name}</Text>
-       </View>
-     )
-   }
+  // renderRow(data) {
+  //   return (
+  //      <View style={{ padding: 10, backgroundColor: 'white', margin: 5 }}>
+  //        <Text>{data.name}</Text>
+  //      </View>
+  //    )
+  //  }
 
 
 
@@ -126,53 +136,56 @@ class FirstTab extends Component {
       <View style={{flex: 1}}>
 
         <View style={{backgroundColor: '#e6e6fa'}}>
-          <Text style={{padding: 20, fontSize: 30, color: '#F5FCFF'}}>TODOリスト</Text>
+          <Text style={{padding: 20, fontSize: 30, color: '#904480'}}>TODOリスト</Text>
         </View>
 
         <View style={{backgroundColor: 'skyblue'}}>
           <TextInput
             style={{height: 50}}
             placeholder="テキスト入力してみよう"
-            onChangeText={(text) => this.setState({text})}
+            onChangeText={(word) => this.setState({word})}
           />
         <Text style={{padding: 10, fontSize: 20}}>
-          {this.state.text.split(' ').map((word) => word && '😎').join(' ')}{this.state.text}
+          {this.state.word.split(' ').map((word) => word && '😎').join(' ')}{this.state.word}
         </Text>
-        </View>
+      </View>
 
-      <View style={{flex: 2, backgroundColor: '#ffc0cb'}}>
+      <View style={{backgroundColor: '#ffc0cb'}}>
         <TextInput
            style={styles.textform}
            onChangeText={this._onChangeText.bind(this)}
         />
-       <TouchableHighlight　onPress={this.addItem.bind(this)}>
-         <Text style={styles.button}>
-           追加
+       <TouchableHighlight　onPress={this.addItem.bind(this)} >
+         <Text style={styles.addButton}>
+           追加する
          </Text>
        </TouchableHighlight>
+
+       </View>
+
        <ScrollView style={{height: 20, backgroundColor: '#e6e6f6'}}>
 
-            <ListView
-              dataSource = {this.state.dataSource}
-              renderRow = {(rowData) =>
-                  <TouchableHighlight onPress={this.addItem.bind(this)}>
-                    <View style={{flexDirection: 'row'}}>
-                    <CheckBox
-                          style={{padding: 5, width:250}}
-                          onClick={()=>this.onClick(rowData)}
-                          isChecked={rowData.isChecked}
-                          rightText={rowData.id +' : '+ rowData.value+' : '+rowData.isChecked}
-                          rightTextStyle={{color: rowData.color}}
-                          // rightTextStyle={()=>{return {color: 'red'}; }}
-                          // rightTextStyle={{color: 'red'}}
-                      />
-                      <Text style={{padding: 5, float:'right', width:50}}>×</Text>
-                    </View>
-                  </TouchableHighlight>
-              }
-            />
+          <ListView
+            dataSource = {this.state.dataSource}
+            renderRow = {(rowData) =>
+                          <View style={{flexDirection: 'row'}}>
+                            <CheckBox
+                                  style={{padding: 5, width:250}}
+                                  onClick={()=>this.onClick(rowData)}
+                                  isChecked={rowData.isChecked}
+                                  rightText={rowData.id +' : '+ rowData.value+' : '+rowData.isChecked}
+                                  rightTextStyle={{color: this.renderColor(rowData)}}
+                                  // rightTextStyle={()=>{return {color: 'red'}; }}
+                                  // rightTextStyle={{color: 'red'}}
+                                  />
+                                  <TouchableHighlight onPress={this.deleteItem.bind(this, rowData)}>
+                                    <Text style={styles.deleteButton}>×</Text>
+                                  </TouchableHighlight>
+                          </View>
+                        }
+                        />
         </ScrollView>
-      </View>
+
 
       <Greeting name='Rexxar' />
       <Greeting name='Jaina' />
@@ -208,15 +221,27 @@ const styles = StyleSheet.create({
    borderWidth: 2,
    backgroundColor: 'white',
  },
- button: {
+ addButton: {
    color: 'orange',
    height: 30,
    width: 80,
-   padding: 10,
+   padding: 8,
    margin: 10,
    textAlign: 'center',
    borderColor: 'orange',
    borderWidth: 2,
+   alignSelf: 'flex-end',
+ },
+ deleteButton: {
+   color: 'orange',
+   height: 20,
+   width: 50,
+   padding: 0,
+   margin: 8,
+   textAlign: 'center',
+   borderColor: 'gray',
+   borderWidth: 1,
+   borderRadius: 2,
    alignSelf: 'flex-end',
  }
 });

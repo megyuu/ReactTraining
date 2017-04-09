@@ -38,8 +38,8 @@ var data = [
 class Greeting extends Component {
   render() {
     return (
-            <Text>Hello {this.props.name}!</Text>
-            );
+      <Text>Hello {this.props.name}!</Text>
+    );
   }
 }
 
@@ -55,9 +55,7 @@ export default class Todo extends Component {
     this.state = {
       selectedTab: 'FirstTab',
     };
-
   }
-
 
   render() {
     return (
@@ -78,7 +76,6 @@ export default class Todo extends Component {
             selected={this.state.selectedTab === 'SecondTab'}
             // icon={{uri: 'search'}}
             systemIcon='featured'
-
             onPress={() => {
               this.setState(
                 {selectedTab: 'SecondTab'}
