@@ -54,8 +54,14 @@ export default class Todo extends Component {
 
     this.state = {
       selectedTab: 'FirstTab',
+      badgeCount: 0,
     };
   }
+
+  updateBadgeCount(cnt){
+    this.setState({badgeCount: cnt});
+  }
+
 
   render() {
     return (
@@ -69,8 +75,10 @@ export default class Todo extends Component {
             );
           }}
           title='todo'
+          badge={this.state.badgeCount > 0 ? this.state.badgeCount : undefined}
+          // badgeColor="black"
         >
-        <FirstTab />
+        <FirstTab onTodoUpdated={this.updateBadgeCount.bind(this)}/>
         </TabBarIOS.Item>
         <TabBarIOS.Item
             selected={this.state.selectedTab === 'SecondTab'}

@@ -72,7 +72,7 @@ class FirstTab extends Component {
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(this.state.todo),
     });
-
+this.props.onTodoUpdated(this.state.todo.length);
   }
 
   addItem() {
@@ -82,7 +82,9 @@ class FirstTab extends Component {
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(this.state.todo),
     });
-
+    // Alert.alert(this.props.badgeCount.state);
+    this.props.onTodoUpdated(this.state.todo.length);
+    // this.props.todo.setState({badgeCount:80});
     // this.state.text = '';
 
     //   // Todo追加後はTextInputを空にする
@@ -91,7 +93,7 @@ class FirstTab extends Component {
 
 
   onClick(data) {
-    Alert.alert('くりっく');
+    // Alert.alert('くりっく');
     //Alert.alert(data.color + data.value);
 
     // data.color = 'black'; //データの更新
@@ -104,6 +106,7 @@ class FirstTab extends Component {
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(this.state.todo),
     });
+    this.props.onTodoUpdated(this.state.todo.length);
 
   }
 
@@ -120,16 +123,6 @@ class FirstTab extends Component {
   _onChangeText(text) {
    this.setState({ text: text });
   }
-
-  // renderRow(data) {
-  //   return (
-  //      <View style={{ padding: 10, backgroundColor: 'white', margin: 5 }}>
-  //        <Text>{data.name}</Text>
-  //      </View>
-  //    )
-  //  }
-
-
 
   render() {
     return (
@@ -166,6 +159,7 @@ class FirstTab extends Component {
        <ScrollView style={{height: 20, backgroundColor: '#e6e6f6'}}>
 
           <ListView
+            enableEmptySections={true}
             dataSource = {this.state.dataSource}
             renderRow = {(rowData) =>
                           <View style={{flexDirection: 'row'}}>
