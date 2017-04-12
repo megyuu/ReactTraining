@@ -57,6 +57,7 @@ class FirstTab extends Component {
       text: '',
       todo: [],
       count: 1,
+      unCheckedCount: 0,
       dataSource: ds.cloneWithRows([]), //'hoge', 'hogehoge'
     };
 
@@ -66,13 +67,26 @@ class FirstTab extends Component {
 
   }
 
+  renderUncheckedTodoCount() {
+    var unCheckedCount = 0;
+    for(var todo in this.state.todo) {
+      if (!todo.isChecked) {
+        unCheckedCount++;
+      }
+    }
+
+    return unCheckedCount;
+  }
+
   deleteItem(item) {
     var indexOfItem = this.state.todo.findIndex((todo) => todo.id === item.id);
     this.state.todo.splice(indexOfItem, 1);
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(this.state.todo),
     });
-this.props.onTodoUpdated(this.state.todo.length);
+    // this.setState({unCheckedCount: this.renderUncheckedTodoCount()})
+    // Alert.alert(this.state.unCheckedCount + '*****');
+    this.props.onTodoUpdated(this.renderUncheckedTodoCount());
   }
 
   addItem() {
@@ -83,14 +97,14 @@ this.props.onTodoUpdated(this.state.todo.length);
       dataSource: this.state.dataSource.cloneWithRows(this.state.todo),
     });
     // Alert.alert(this.props.badgeCount.state);
-    this.props.onTodoUpdated(this.state.todo.length);
+    // this.setState({unCheckedCount: this.renderUncheckedTodoCount()})
+    this.props.onTodoUpdated(this.renderUncheckedTodoCount());
     // this.props.todo.setState({badgeCount:80});
     // this.state.text = '';
 
     //   // Todo追加後はTextInputを空にする
     // this.setState({text: ''});
   }
-
 
   onClick(data) {
     // Alert.alert('くりっく');
@@ -106,7 +120,8 @@ this.props.onTodoUpdated(this.state.todo.length);
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(this.state.todo),
     });
-    this.props.onTodoUpdated(this.state.todo.length);
+    this.setState({unCheckedCount: this.renderUncheckedTodoCount(), });
+    this.props.onTodoUpdated(this.renderUncheckedTodoCount());
 
   }
 
@@ -117,8 +132,6 @@ this.props.onTodoUpdated(this.state.todo.length);
       return 'black';
     }
   }
-
-
 
   _onChangeText(text) {
    this.setState({ text: text });
@@ -216,14 +229,16 @@ const styles = StyleSheet.create({
    backgroundColor: 'white',
  },
  addButton: {
-   color: 'orange',
+   color: '#ccc',
    height: 30,
    width: 80,
    padding: 8,
    margin: 10,
    textAlign: 'center',
-   borderColor: 'orange',
+   borderColor: '#ba55d3',
+   backgroundColor: '#ba55d3',
    borderWidth: 2,
+   borderRadius: 8,
    alignSelf: 'flex-end',
  },
  deleteButton: {
